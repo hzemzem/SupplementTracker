@@ -16,7 +16,7 @@ const supplements: Supplement[] = [
   { id: "multi", name: "Multivitamin", time: "AM", dosage: "1 capsule", foodPairing: "fat", alternateWith: "bone" },
   { id: "magnesium", name: "Magnesium Glycinate", time: "AM", dosage: "1 capsule", foodPairing: "any" },
   { id: "omega", name: "Omega-3", time: "AM", dosage: "2 softgels", foodPairing: "fat" },
-  { id: "magnesium", name: "Magnesium Glycinate", time: "PM", dosage: "2 capsules", foodPairing: "any" },
+  { id: "magnesium2", name: "Magnesium Glycinate", time: "PM", dosage: "2 capsules", foodPairing: "any" },
   { id: "omega2", name: "Omega-3 (2nd dose)", time: "PM", dosage: "2 softgels", foodPairing: "fat" },
   { id: "bone", name: "Bone Support Formula", time: "PM", dosage: "1 capsule", foodPairing: "any", alternateWith: "multi" }
 ];
