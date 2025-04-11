@@ -34,32 +34,40 @@ export default function SupplementTracker() {
   const [streak, setStreak] = useState<number>(1);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("supplement-tracker") || "{}");
     const today = dayjs().format("YYYY-MM-DD");
-    const yesterday = dayjs().subtract(1, "day").format("YYYY-MM-DD");
-
-    if (stored.lastCheckIn === yesterday) {
-      setStreak((stored.currentStreak || 1) + 1);
-    } else if (stored.lastCheckIn !== today) {
+  
+    // Load streak tracking
+    const data = JSON.parse(localStorage.getItem('supplement-tracker') || '{}');
+    const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+  
+    if (data.lastCheckIn === yesterday) {
+      setStreak((data.currentStreak || 1) + 1);
+    } else if (data.lastCheckIn !== today) {
       setStreak(1);
     } else {
-      setStreak(stored.currentStreak || 1);
+      setStreak(data.currentStreak || 1);
     }
-  }, []);
+  
+    // Load today's checklist
+    const saved = JSON.parse(localStorage.getItem(`checklist-${today}`) || '{}');
+    setChecked(saved);
+  }, []);  
 
   const handleCheck = (id: string) => {
     const updated = { ...checked, [id]: !checked[id] };
     setChecked(updated);
 
+    const today = dayjs().format("YYYY-MM-DD");
+    localStorage.setItem(`checklist-${today}`, JSON.stringify(updated));
+  
     const allChecked = getTodaySupplements().every(s => updated[s.id]);
     if (allChecked) {
-      const today = dayjs().format("YYYY-MM-DD");
-      localStorage.setItem("supplement-tracker", JSON.stringify({
+      localStorage.setItem('supplement-tracker', JSON.stringify({
         lastCheckIn: today,
         currentStreak: streak
       }));
     }
-  };
+  };  
 
   const am = getTodaySupplements().filter(s => s.time === "AM");
   const pm = getTodaySupplements().filter(s => s.time === "PM");
