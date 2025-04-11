@@ -29,7 +29,7 @@ export default function SupplementItem({
     <div
       onClick={() => onToggle(id)}
       className={`flex justify-between items-center p-4 mb-2 rounded-xl border ${
-        checked ? "bg-green-100 border-green-500" : "bg-white border-gray-300"
+        checked ? "bg-[#CCF5E1] border-[#40826D]" : "bg-white border-gray-300"
       } transition duration-300 ease-in-out cursor-pointer`}
     >
       <div>
@@ -43,7 +43,7 @@ export default function SupplementItem({
         initial={{ scale: 0 }}
         animate={{ scale: checked ? 1 : 0 }}
         transition={{ type: "spring", stiffness: 400 }}
-        className="w-6 h-6 rounded-full bg-green-600 flex items-center justify-center text-white text-sm"
+        className="w-6 h-6 rounded-full bg-[#40826D] flex items-center justify-center text-white text-sm"
       >
         ✓
       </motion.div>

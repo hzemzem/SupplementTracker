@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import SupplementItem from "../components/SupplementItem";
+import SectionTitle from "../components/SectionTitle";
 
 type Supplement = {
   id: string;
@@ -94,16 +95,16 @@ export default function SupplementTracker() {
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6 bg-white shadow rounded-lg">
-      <h1 className="text-2xl font-bold text-gray-600">Daily Supplement Checklist</h1>
-      <p className="text-sm text-gray-600">🔥 Streak: {streak} day{streak > 1 ? "s" : ""}</p>
+      <h1 className="text-2xl font-bold text-gray-700">Daily Supplement Checklist</h1>
+      <SectionTitle icon="flame">Streak: {streak} day{streak > 1 ? "s" : ""}</SectionTitle>
 
       <div>
-        <h2 className="text-lg font-semibold text-gray-600">🌞 Morning</h2>
+        <SectionTitle icon="sun">Morning</SectionTitle>
         {renderList(am)}
       </div>
 
       <div>
-        <h2 className="text-lg font-semibold text-gray-600">🌙 Evening</h2>
+        <SectionTitle icon="moon">Evening</SectionTitle>
         {renderList(pm)}
       </div>
     </div>
