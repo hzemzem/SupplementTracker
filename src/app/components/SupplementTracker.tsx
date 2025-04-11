@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import SupplementItem from "../components/SupplementItem";
 
 type Supplement = {
   id: string;
@@ -35,23 +36,28 @@ export default function SupplementTracker() {
 
   useEffect(() => {
     const today = dayjs().format("YYYY-MM-DD");
+    const yesterday = dayjs().subtract(1, "day").format("YYYY-MM-DD");
   
-    // Load streak tracking
-    const data = JSON.parse(localStorage.getItem('supplement-tracker') || '{}');
-    const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
-  
-    if (data.lastCheckIn === yesterday) {
-      setStreak((data.currentStreak || 1) + 1);
-    } else if (data.lastCheckIn !== today) {
-      setStreak(1);
-    } else {
-      setStreak(data.currentStreak || 1);
-    }
-  
-    // Load today's checklist
+    // Load saved checklist
     const saved = JSON.parse(localStorage.getItem(`checklist-${today}`) || '{}');
     setChecked(saved);
-  }, []);  
+  
+    // Check if all supplements were taken yesterday
+    const streakData = JSON.parse(localStorage.getItem("supplement-tracker") || "{}");
+    const yesterdayChecklist = JSON.parse(localStorage.getItem(`checklist-${yesterday}`) || '{}');
+  
+    const allYesterdayChecked = getTodaySupplements()
+      .map(s => yesterdayChecklist[s.id])
+      .every(Boolean); // all values must be true
+  
+    if (streakData.lastCheckIn === yesterday && allYesterdayChecked) {
+      setStreak((streakData.currentStreak || 1) + 1);
+    } else if (streakData.lastCheckIn === today) {
+      setStreak(streakData.currentStreak || 1);
+    } else {
+      setStreak(1);
+    }
+  }, []);   
 
   const handleCheck = (id: string) => {
     const updated = { ...checked, [id]: !checked[id] };
@@ -62,27 +68,29 @@ export default function SupplementTracker() {
   
     const allChecked = getTodaySupplements().every(s => updated[s.id]);
     if (allChecked) {
-      localStorage.setItem('supplement-tracker', JSON.stringify({
+    const today = dayjs().format("YYYY-MM-DD");
+    localStorage.setItem("supplement-tracker", JSON.stringify({
         lastCheckIn: today,
         currentStreak: streak
-      }));
+    }));
     }
   };  
 
   const am = getTodaySupplements().filter(s => s.time === "AM");
   const pm = getTodaySupplements().filter(s => s.time === "PM");
 
-  const renderList = (items: Supplement[]) => items.map(s => (
-    <label key={s.id} className="flex items-center gap-2 py-1">
-      <input
-        type="checkbox"
+  const renderList = (items: Supplement[]) =>
+    items.map((s) => (
+      <SupplementItem
+        key={s.id}
+        id={s.id}
+        name={s.name}
+        dosage={s.dosage}
+        foodPairing={s.foodPairing}
         checked={!!checked[s.id]}
-        onChange={() => handleCheck(s.id)}
-        className="w-4 h-4"
+        onToggle={handleCheck}
       />
-      <span className="text-gray-600">{s.name} — {s.dosage} ({s.foodPairing === "empty" ? "empty stomach" : s.foodPairing === "fat" ? "with fat" : "any time"})</span>
-    </label>
-  ));
+    ));  
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6 bg-white shadow rounded-lg">
